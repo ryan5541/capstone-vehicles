@@ -1,0 +1,37 @@
+Ideas and Prelimninary Data Sources
+
+Topic - Vehicle sales over time, trends in vehicle sales, impact of broader economic forces on vehicle sales
+
+Preliminary Questions
+1. How have sales in vehicles evolved over time?
+	->Have trends varied by market segment (automobiles vs. light trucks vs. heavy trucks etc.)
+2. How do vehicle sales respond to changes in broader economic forces such as inflation, median income etc,
+as well as gas prices?
+3. Can we predict future vehicle sales based on past vehicle sales as well as the economic variables described above?
+4. What implications do the above findings have for the stock prices of major automobile OEMs?
+
+https://fred.stlouisfed.org/series/GASREGCOVW -> gas prices
+https://www.census.gov/economic-indicators/ -> economic indicators
+https://www.census.gov/retail/marts/www/timeseries.html -> restail since 1992, gas, cars, etc.
+https://fred.stlouisfed.org/series/TOTALSA -> total vehicle sales.
+https://fred.stlouisfed.org/searchresults/?st=retail&t=vehicles%3Bstate&ob=sr&od=desc -> vehicle datasets [Fred]
+https://fred.stlouisfed.org/searchresults?st=retail&t=retail%3Bnaics%3Bvehicles&ob=sr&od=desc -> list of employment datasets
+https://fred.stlouisfed.org/series/DAUTOSAAR -> motor vehicle sales.
+https://fred.stlouisfed.org/graph/?id=LAUTOSA,LTRUCKSA -> trends in car sales? Perhaps
+[placeholder for census data]
+https://www.marketwatch.com/investing/index/djusau?countrycode=xx
+
+Plan of attack:
+-> broader state of the economy
+	CPI (All items) -> https://fred.stlouisfed.org/series/USACPIALLMINMEI
+	GDP per capita -> https://fred.stlouisfed.org/series/A939RX0Q048SBEA
+	Median Household Income -> https://fred.stlouisfed.org/series/MEHOINUSA672N
+	Median Personal Income -> https://fred.stlouisfed.org/series/MEPAINUSA672N
+	
+-> demographics?
+-> total vehicle sales?
+-> gas prices
+
+= handling the timeseries
+= ML at worst is taken care of by difference learning
+= stream comes from marketwatch, or wherever we can get the stock
