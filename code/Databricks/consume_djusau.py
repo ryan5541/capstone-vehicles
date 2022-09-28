@@ -70,14 +70,13 @@ c = Consumer({
     'security.protocol': 'SASL_SSL',
     'sasl.username': confluentApiKey,
     'sasl.password': confluentSecret,
-    'group.id': str(uuid.uuid1()),  # this will create a new consumer group on each invocation.
+    'group.id': 'group1place',  # this will create a new consumer group on each invocation.
     'auto.offset.reset': 'earliest',
     'enable.auto.commit': True,
     'error_cb': error_cb,
 })
 
 c.subscribe([confluentTopicName])
-
 
 # COMMAND ----------
 
@@ -92,11 +91,14 @@ aString = {}
 
 kafkaListDictionaries = []
 
-while True:
+for i in range(1000):
+#while True:
     try:
         msg = c.poll(timeout=1.0)
+        #print(msg.offset())
         if msg is None:
             break
+            #pass
         elif msg.error():
             print("Consumer error: {}".format(msg.error()))
             break
@@ -104,13 +106,14 @@ while True:
             aString=json.loads('{}'.format(msg.value().decode('utf-8')))
             aString['timestamp'] = msg.timestamp()[1]
             kafkaListDictionaries.append(aString)
-
+            c.commit()
+            
     except Exception as e:
         print(e)
-      
-    for message in kafkaListDictionaries:
-        print(message)
 
+for message in kafkaListDictionaries:
+    print(message)
+#print(msg.offset())
 
 # COMMAND ----------
 
@@ -120,6 +123,55 @@ kafkaListDictionaries
 
 df = spark.createDataFrame(kafkaListDictionaries)
 df.display()
+
+# COMMAND ----------
+
+###### Mount Point 1 through Oauth security.
+storageAccount = "gen10datafund2207"
+storageContainer = "jazztrio"
+clientSecret = "Cty8Q~AvEO_qC-MjvPvosYauiNsffOHKnMpj7cmd"
+clientid = "2ca50102-5717-4373-b796-39d06568588d"
+mount_point = "/mnt/jazztrio/datain" # the mount point will be unique to you
+#20200906-20201006/Detroit911-20200906-20201006.csv 
+
+
+configs = {"fs.azure.account.auth.type": "OAuth",
+       "fs.azure.account.oauth.provider.type": "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider",
+       "fs.azure.account.oauth2.client.id": clientid,
+       "fs.azure.account.oauth2.client.secret": clientSecret,
+       "fs.azure.account.oauth2.client.endpoint": "https://login.microsoftonline.com/d46b54b2-a652-420b-aa5a-2ef7f8fc706e/oauth2/token",
+       "fs.azure.createRemoteFileSystemDuringInitialization": "true"}
+
+try: 
+    dbutils.fs.unmount(mount_point)
+except:
+    pass
+
+dbutils.fs.mount(
+source = "abfss://"+storageContainer+"@"+storageAccount+".dfs.core.windows.net/",
+mount_point = mount_point,
+extra_configs = configs)
+
+# COMMAND ----------
+
+#This is purely for backup purposes, since we write directly to the database...
+
+data_location = "/mnt/jazztrio/datain/Cleaned/"
+
+#df.repartition(1).write.csv(path=f"{data_location}djusau.csv", mode="append")
+
+df.repartition(1)\
+.write.format("com.databricks.spark.csv").mode("append") \
+.option("header", "true")\
+.save(data_location)
+
+# # By spark still dumps this out as one file. 
+# files = dbutils.fs.ls(data_location)
+# csv_file = [x.path for x in files if x.path.endswith(".csv")][0]
+# print(csv_file)
+# dbutils.fs.mv(csv_file, data_location.rstrip('/') + ".csv")
+# dbutils.fs.rm(data_location, recurse = True)
+
 
 # COMMAND ----------
 
@@ -138,6 +190,3 @@ df.write.format('jdbc').option("url", f"jdbc:sqlserver://{server}:1433;databaseN
     .option("password", password) \
     .option("driver", "com.microsoft.sqlserver.jdbc.SQLServerDriver") \
     .save()
-
-# COMMAND ----------
-

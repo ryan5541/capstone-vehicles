@@ -1,6 +1,6 @@
 # Databricks notebook source
-# MAGIC %pip install bs4
-# MAGIC %pip install requests
+#%pip install bs4
+#%pip install requests
 
 # COMMAND ----------
 
@@ -10,7 +10,6 @@ from datetime import datetime
 import time
 
 # COMMAND ----------
-
 
 def error_cb(err):
     """ The error callback is used for generic client errors. These
@@ -75,14 +74,12 @@ p = Producer({
     'error_cb': error_cb,
 })
 
-
-
-
 # COMMAND ----------
 
 ## Simple Producer with JSON message. 
-dict_list = []
+#dict_list = []
 for i in range(6):
+#while True:
     row_dict = {}
     response = requests.get('https://www.google.com/finance/quote/DJUSAU:INDEXDJX?sa=X&ved=2ahUKEwi_oaSkwab6AhV3EVkFHf-mDLIQ3ecFegQIBBAY')
     html = BeautifulSoup(response.text, 'html.parser')
@@ -90,9 +87,8 @@ for i in range(6):
     row_dict['price'] = price
     row_dict['time'] = datetime.strftime(datetime.now(), '%x %X')
     #print(f"Price: {row_dict['price']}, Timestamp: {row_dict['time']}")
-    #i=i+1
-    #aDict["i"] = i
     aDict = row_dict
+    
     ## Clarification on p.produce
     # produce ( topic, message in JSON)
     p.produce(confluentTopicName,json.dumps(aDict))

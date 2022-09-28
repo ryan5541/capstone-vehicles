@@ -17,8 +17,8 @@
 
 # COMMAND ----------
 
-df = spark.read.options(header = True).csv('/mnt/jazztrio/datain/Cleaned/vehicle_sales_cleaned.csv')
-df = df.withColumnRenamed('_c0', 'TimeSeriesID')
+df = spark.read.options(header = True).csv('/mnt/jazztrio/datain/Cleaned/merged_time_series.csv')
+#df = df.withColumnRenamed('_c0', 'TimeSeriesID')
 display(df)
 
 # COMMAND ----------

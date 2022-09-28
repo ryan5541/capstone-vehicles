@@ -1,16 +1,4 @@
 # Databricks notebook source
-# MAGIC %md 
-# MAGIC 
-# MAGIC # Simple Kafka Topics Example
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC 
-# MAGIC ## Error Callback Functions
-
-# COMMAND ----------
-
 def error_cb(err):
     """ The error callback is used for generic client errors. These
         errors are generally to be considered informational as the client will
@@ -43,21 +31,6 @@ def acked(err, msg):
 
 # COMMAND ----------
 
-# MAGIC %md 
-# MAGIC 
-# MAGIC ### Helpful Links
-# MAGIC 
-# MAGIC * [Confluent's github repo](https://github.com/confluentinc/confluent-kafka-python) - Confluent's github repo of code examples for python Kafka examples, includes almost everything needed for core development with Kafka
-# MAGIC * [Docstring Documentation](https://www.datacamp.com/community/tutorials/docstrings-python) - Comments on Page made in Docstring
-
-# COMMAND ----------
-
-# MAGIC %md 
-# MAGIC 
-# MAGIC ## Connection Strings for our environment and imports
-
-# COMMAND ----------
-
 #DO NOT DELETE THIS
 from confluent_kafka import Consumer
 from time import sleep
@@ -78,13 +51,6 @@ confluentSecret = "/XYn+w3gHGMqpe9l0TWvA9FznMYNln2STI+dytyPqtZ9QktH0TbGXUqepEsJ/
 confluentRegistryApiKey = "YHMHG7E54LJA55XZ"
 confluentRegistrySecret = "/XYn+w3gHGMqpe9l0TWvA9FznMYNln2STI+dytyPqtZ9QktH0TbGXUqepEsJ/nR0"
 
-
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ## Kakfa Admin Setup
-
 # COMMAND ----------
 
 admin_client = AdminClient({
@@ -98,13 +64,6 @@ admin_client = AdminClient({
     'error_cb': error_cb,
 })
 
-
-# COMMAND ----------
-
-# MAGIC %md 
-# MAGIC 
-# MAGIC 
-# MAGIC ## Simple Kakfa Topics Creator
 
 # COMMAND ----------
 
@@ -134,25 +93,13 @@ finally:
 
 # COMMAND ----------
 
-# MAGIC %md
-# MAGIC 
-# MAGIC The create_topics method does not actually run the creation of the topic.   It sets up the a topic object and then the topic.result ( or in this case future.result) actually runs it.  This example lets you bulk load topics to kafka
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC 
-# MAGIC ## Delete a topic
-
-# COMMAND ----------
-
 #topic_list.append(NewTopic("example_topic", 1, 3))
 #admin_client.create_topics(topic_list)
 #futures = admin_client.create_topics(topic_list)
 
 # parameter: topics = list of string topics, timeout
 try:
-    topics =['test']
+    topics =['DJUSAU']
     fs = admin_client.delete_topics(topics, request_timeout=30)
     
     for topic, f in fs.items():
