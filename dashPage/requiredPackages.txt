@@ -1,0 +1,8 @@
+dash
+dash.dependencies
+dash_bootstrap_components
+dash_core_components
+plotly.express
+skimage
+
+All packages are python.
